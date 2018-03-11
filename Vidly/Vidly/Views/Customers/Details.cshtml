@@ -3,6 +3,13 @@
     ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>@Model.Name</h2>
+<h2>@Model.Name</h2> 
+<ul>
+    <li>@Model.MembershipType</li>
+    @if (Model.Birthdate.HasValue)
+    {
+        <li>@Model.Birthdate.Value.ToString("dd/MM/yyyy")</li>
+    }
+</ul>
 
 
