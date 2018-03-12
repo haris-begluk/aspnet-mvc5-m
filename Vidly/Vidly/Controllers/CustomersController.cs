@@ -26,14 +26,14 @@ namespace Vidly.Controllers
             _context.Dispose();
         }
         //Add Customer 
-        public ActionResult New()
+        public ViewResult New()
         {
             var membershipTypes = _context.MembershipTypes.ToList();
-            var viewModel = new CustomerFormViewModel
+            var viewModel = new NewCustomerViewModel
             {
                 MembershipTypes = membershipTypes
             };
-            return View(viewModel);
+            return View("CustomerForm", viewModel);
         }
 
         //Create Action  
@@ -64,7 +64,7 @@ namespace Vidly.Controllers
             var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
             if (customer == null)
                 return HttpNotFound();
-            var viewModel = new CustomerFormViewModel
+            var viewModel = new NewCustomerViewModel
             {
                 Customer = customer,
                 MembershipTypes = _context.MembershipTypes.ToList()
