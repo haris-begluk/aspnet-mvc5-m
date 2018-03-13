@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Vidly.Models;
 
 namespace Vidly.Dtos
 { //Install-Package automapper -version:4.1
@@ -17,7 +16,7 @@ namespace Vidly.Dtos
         public byte MembershipTypeId { get; set; }
 
 
-        [Min18YearsIfAMember]
+        //[Min18YearsIfAMember]
         public DateTime? Birthdate { get; set; }
     }
 }
