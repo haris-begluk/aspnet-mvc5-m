@@ -9,14 +9,17 @@ namespace Vidly.App_Start
         //Install-Package automapper -version:4.1
         public MappingProfile()
         {
-            //Domain To Dto
+            // Domain to Dto
             Mapper.CreateMap<Customer, CustomerDto>();
             Mapper.CreateMap<Movie, MovieDto>();
             Mapper.CreateMap<MembershipType, MembershipTypeDto>();
+            Mapper.CreateMap<Genre, GenreDto>();
 
-            //Dto To Domain 
+
+            // Dto to Domain
             Mapper.CreateMap<CustomerDto, Customer>()
                 .ForMember(c => c.Id, opt => opt.Ignore());
+
             Mapper.CreateMap<MovieDto, Movie>()
                 .ForMember(c => c.Id, opt => opt.Ignore());
 
