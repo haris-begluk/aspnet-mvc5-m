@@ -8,6 +8,11 @@
     iterate over the list. If in the future, we replace the List with a
     different data structure, as long as it is enumerable, our view code
     will remain unchanged.
+    Za novi izgled tabele ukljuciti bootbox.js
+    install-package bootbox -version:4.3.0
+
+    Za datatable novi izgled tabele ukljuciti:
+    install-package jquery.datatables -version:1.10.11
 *@
 @{
     ViewBag.Title = "Customers";
@@ -17,24 +22,18 @@
 <p>
     @Html.ActionLink("New Customer", "New", "Customers", null, new { @class = "btn btn-primary" })
 </p>
-@if (!Model.Any())
-{
-    <p>We don't have any customers yet.</p>
-}
-else
-{
+
 
     <table id="customers" class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th>Customer</th>
                 <th>Membership Type</th>
-                <th>Discount Rate</th>
                 <th>Edit Or Delete</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var customer in Model)
+            @*@foreach (var customer in Model)
             {
                 <tr>
                     <td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
@@ -42,28 +41,56 @@ else
                     <td>@customer.MembershipType.DiscountRate %</td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", "Customers", new { id = customer.Id }, null)
-                    &emsp;<button data-customer-id="@customer.Id" class="btn-link js-delete">Delete</button>
-                </td>
-            </tr>
-        }
+                        &emsp;<button data-customer-id="@customer.Id" class="btn-link js-delete">Delete</button>
+                    </td>
+                </tr>
+            }*@
         </tbody>
     </table>
-}
+
 @section scripts
     {
     <script>
         $(document).ready(function () {
-            $("#customers .js-delete").on("click", function () { 
-                var button = $(this);
-                if (confirm("Are you sure you??")) {
-                    $.ajax({
-                        url: "/api/customers/" + button.attr("data-customer-id"), 
-                        method: "DELETE", 
-                        success: function () {
-                            button.parents("tr").remove();
+            var table = $("#customers").DataTable({
+                ajax: {
+                    url: "/api/customers",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, customer) {
+                            return "<a href='/customers/edit/" + customer.id + "'>" + customer.name + "</a>";
                         }
-                    });
-                }
+                    },
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+
+            $("#customers").on("click", ".js-delete", function () {
+                var button = $(this);
+
+                bootbox.confirm("Are you sure you want to delete this customer?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/customers/" + button.attr("data-customer-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw().remove();
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>
